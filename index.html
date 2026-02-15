@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slowed Penguin V2 - Retro Vaporwave Studio</title>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --bg-color: #008080;
+            --panel-bg: #c0c0c0;
+            --panel-border-light: #ffffff;
+            --panel-border-dark: #808080;
+            --text-color: #000000;
+            --accent-color: #000080;
+            --accent-text: #ffffff;
+            --font-main: 'Tahoma', sans-serif;
+            --title-height: 24px;
+        }
+
+        /* --- THEME: WINDOWS 98 (.exe) --- */
+        .theme-win98 {
+            --bg-color: #008080;
+            --panel-bg: #c0c0c0;
+            --panel-border-light: #dfdfdf;
+            --panel-border-dark: #808080;
+            --text-color: #000;
+            --accent-color: linear-gradient(90deg, #000080, #1084d0);
+            --accent-text: #fff;
+            --font-main: 'Tahoma', sans-serif;
+        }
+        .theme-win98 .title-bar-btn {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px solid #fff;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            box-shadow: inset 1px 1px #dfdfdf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: #000;
+        }
+        .theme-win98 #xeyes-container { display: none; }
+
+        /* --- THEME: MAC CLASSIC (.app) --- */
+        .theme-mac {
+            --bg-color: #666; 
+            --panel-bg: #fff;
+            --panel-border-light: #000;
+            --panel-border-dark: #000;
+            --text-color: #000;
+            --accent-color: #fff;
+            --accent-text: #000;
+            --font-main: 'Geneva', 'Chicago', sans-serif;
+        }
+        .theme-mac .retro-panel {
+            border: 1px solid #000;
+            box-shadow: 2px 2px 0px #000;
+        }
+        .theme-mac #titleBar {
+            border-bottom: 1px solid #000;
+            background: repeating-linear-gradient(0deg, #000, #000 1px, #fff 1px, #fff 2px);
+            height: 20px;
+            padding: 2px 10px;
+        }
+        .theme-mac #appTitle {
+            background: #fff;
+            padding: 0 8px;
+            font-weight: 900;
+        }
+        .theme-mac .title-bar-btn {
+            border: 1px solid #000;
+            background: #fff;
+            width: 14px;
+            height: 14px;
+        }
+        .theme-mac #xeyes-container { display: none; }
+
+        /* --- THEME: CALDERA LINUX (.sh) --- */
+        .theme-linux {
+            --bg-color: #354a5f; 
+            --panel-bg: #d4d0c8;
+            --panel-border-light: #fff;
+            --panel-border-dark: #404040;
+            --text-color: #000;
+            --accent-color: #0a246a;
+            --accent-text: #fff;
+            --font-main: 'Courier New', monospace;
+        }
+        .theme-linux #titleBar {
+            background: #000066;
+            height: 32px;
+            border-radius: 4px 4px 0 0;
+        }
+        .theme-linux .title-bar-btn {
+            background: #d4d0c8;
+            border-radius: 2px;
+            width: 18px;
+            height: 18px;
+            border: 1px solid #444;
+            color: #000;
+        }
+        .theme-linux #xeyes-container { 
+            display: flex; 
+            gap: 2px;
+            margin-left: 10px;
+            background: #fff;
+            padding: 1px;
+            border: 1px solid #000;
+        }
+
+        /* XEYES STYLING */
+        .eye {
+            width: 14px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            border: 1px solid black;
+            position: relative;
+        }
+        .pupil {
+            width: 5px;
+            height: 5px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- GLOBAL UI --- */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        .retro-panel {
+            background-color: var(--panel-bg);
+            border: 2px solid;
+            border-top-color: var(--panel-border-light);
+            border-left-color: var(--panel-border-light);
+            border-right-color: var(--panel-border-dark);
+            border-bottom-color: var(--panel-border-dark);
+        }
+
+        .retro-inset {
+            background-color: #000;
+            border: 2px solid;
+            border-top-color: #404040;
+            border-left-color: #404040;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        .retro-btn {
+            background-color: var(--panel-bg);
+            border: 2px solid;
+            border-top-color: var(--panel-border-light);
+            border-left-color: var(--panel-border-light);
+            border-right-color: var(--panel-border-dark);
+            border-bottom-color: var(--panel-border-dark);
+            padding: 2px 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .retro-btn:active {
+            border-top-color: var(--panel-border-dark);
+            border-left-color: var(--panel-border-dark);
+            border-right-color: var(--panel-border-light);
+            border-bottom-color: var(--panel-border-light);
+        }
+
+        /* Sliders */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px; width: 12px;
+            background: var(--panel-bg);
+            border: 1px solid #000;
+            cursor: pointer;
+            margin-top: -8px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 4px; background: #444; border: 1px solid #fff;
+        }
+
+        .led { width: 10px; height: 10px; background: #333; border-radius: 50%; border: 1px solid #000; }
+        .led.on { background: #0f0; box-shadow: 0 0 5px #0f0; }
+
+        .crt-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body class="theme-win98 h-screen flex flex-col items-center justify-center p-4" onmousemove="updateEyes(event)">
+
+    <!-- MAIN OS WINDOW -->
+    <div class="retro-panel w-full max-w-6xl h-[90vh] flex flex-col relative shadow-2xl overflow-hidden">
+        
+        <!-- TITLE BAR -->
+        <div id="titleBar" class="flex items-center justify-between p-1 px-2 select-none" style="background: var(--accent-color); color: var(--accent-text);">
+            <div class="flex items-center gap-2 overflow-hidden">
+                <i data-lucide="music" class="w-4 h-4 flex-shrink-0"></i>
+                <span id="appTitle" class="text-sm truncate">Slowed Penguin V2.exe</span>
+                
+                <!-- XEYES FOR LINUX -->
+                <div id="xeyes-container">
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                </div>
+            </div>
+            <div class="flex gap-1 flex-shrink-0">
+                <button class="title-bar-btn">_</button>
+                <button class="title-bar-btn">□</button>
+                <button class="title-bar-btn" style="background: #c0c0c0; color: #000;">X</button>
+            </div>
+        </div>
+
+        <!-- MENU BAR -->
+        <div class="flex gap-4 p-1 px-3 border-b border-[var(--panel-border-dark)] text-xs">
+            <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">File</span>
+            <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Edit</span>
+            <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Processing</span>
+            <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Help</span>
+        </div>
+
+        <!-- TOOLBAR (OS Switcher) -->
+        <div class="bg-[var(--panel-bg)] p-2 flex gap-2 border-b-2 border-[var(--panel-border-dark)] items-center overflow-x-auto">
+            <span class="text-[10px] font-bold uppercase mr-2">Environment:</span>
+            <button onclick="setTheme('win98')" class="retro-btn">Win98</button>
+            <button onclick="setTheme('mac')" class="retro-btn">Classic Mac</button>
+            <button onclick="setTheme('linux')" class="retro-btn">Caldera 98</button>
+            <div class="h-4 w-[1px] bg-gray-500 mx-2"></div>
+            
+            <label class="retro-btn cursor-pointer flex items-center gap-1">
+                <i data-lucide="music-2" class="w-3 h-3"></i> Audio
+                <input type="file" id="audioUpload" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
+            </label>
+            <label class="retro-btn cursor-pointer flex items-center gap-1">
+                <i data-lucide="image" class="w-3 h-3"></i> Image
+                <input type="file" id="imageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+            </label>
+        </div>
+
+        <!-- MAIN WORKSPACE -->
+        <div class="flex-1 flex flex-col md:flex-row p-2 gap-2 overflow-hidden">
+            
+            <!-- LEFT: Transport & Pitch -->
+            <div class="flex flex-col w-full md:w-80 gap-2">
+                <div class="retro-panel p-2 flex-1 flex flex-col">
+                    <div class="text-[10px] font-bold mb-2 uppercase opacity-70">WAVEFORM ANALYZER</div>
+                    <div class="retro-inset h-32 relative mb-2">
+                        <canvas id="waveformCanvas" class="w-full h-full"></canvas>
+                        <div id="loadingOverlay" class="absolute inset-0 bg-black/80 text-white flex items-center justify-center text-xs hidden font-mono">
+                            LOADING_DATA...
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex gap-1">
+                            <button onclick="togglePlay()" class="retro-btn w-12 h-10"><i data-lucide="play" class="w-5 h-5"></i></button>
+                            <button onclick="stopAudio()" class="retro-btn w-12 h-10"><i data-lucide="square" class="w-5 h-5"></i></button>
+                        </div>
+                        <div class="text-right">
+                            <div class="led mx-auto mb-1" id="playLed"></div>
+                            <div id="trackTime" class="font-mono text-[10px]">00:00/00:00</div>
+                        </div>
+                    </div>
+
+                    <div class="retro-panel p-2 mb-2 bg-[#ddd]">
+                        <div class="flex justify-between text-[10px] font-bold mb-1">
+                            <span>MASTER PITCH</span>
+                            <span id="rateVal">1.00x</span>
+                        </div>
+                        <input type="range" id="rateSlider" min="0.5" max="1.5" step="0.01" value="1.0" oninput="updateParam('rate', this.value)">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-1 mt-auto">
+                        <button onclick="applyPreset('vaporwave')" class="retro-btn text-[9px]">VAPORWAVE</button>
+                        <button onclick="applyPreset('screw')" class="retro-btn text-[9px]">DJ SCREW</button>
+                        <button onclick="applyPreset('nightcore')" class="retro-btn text-[9px]">SPED UP</button>
+                        <button onclick="applyPreset('ambient')" class="retro-btn text-[9px]">ISOLATION</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER: Visualizer -->
+            <div class="flex-1 flex flex-col gap-2">
+                <div class="retro-panel p-1 flex-1 flex flex-col">
+                    <div class="text-[10px] font-bold p-1 bg-gray-300 border-b border-gray-500 flex justify-between">
+                        <span>PIXEL-MOSH MONITOR</span>
+                        <span id="fps">30 FPS</span>
+                    </div>
+                    <div class="flex-1 bg-black relative overflow-hidden">
+                        <canvas id="visualizerCanvas" class="w-full h-full object-contain"></canvas>
+                        <div class="crt-overlay"></div>
+                    </div>
+                    <div class="p-2 grid grid-cols-2 md:grid-cols-4 gap-2 border-t border-gray-400 bg-gray-200">
+                        <div class="flex flex-col">
+                            <span class="text-[9px]">RGB OFFSET</span>
+                            <input type="range" min="0" max="30" value="2" oninput="updateVis('rgb', this.value)">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px]">GLITCH FRQ</span>
+                            <input type="range" min="0" max="100" value="5" oninput="updateVis('glitch', this.value)">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px]">SCANLINES</span>
+                            <input type="range" min="0" max="1" step="0.1" value="0.2" oninput="updateVis('scanlines', this.value)">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px]">SMEAR</span>
+                            <input type="range" min="1" max="10" value="1" oninput="updateVis('pixel', this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: DSP Rack -->
+            <div class="w-full md:w-64 flex flex-col gap-2">
+                <div class="retro-panel p-2 flex-1 flex flex-col">
+                    <div class="text-[10px] font-bold mb-2 text-center border-b border-gray-400">DSP RACK</div>
+                    
+                    <div class="space-y-3 overflow-y-auto pr-1">
+                        <div>
+                            <span class="text-[10px]">REVERB (DRY/WET)</span>
+                            <input type="range" min="0" max="1" step="0.01" value="0.1" oninput="updateParam('reverb', this.value)">
+                        </div>
+                        <div>
+                            <span class="text-[10px]">BASS (LOWSHELF)</span>
+                            <input type="range" min="0" max="25" step="1" value="0" oninput="updateParam('bass', this.value)">
+                        </div>
+                        <div>
+                            <span class="text-[10px]">LP FILTER</span>
+                            <input type="range" min="200" max="20000" step="100" value="20000" oninput="updateParam('lowpass', this.value)">
+                        </div>
+                        <div>
+                            <span class="text-[10px]">SATURATION</span>
+                            <input type="range" min="0" max="50" value="0" oninput="updateParam('distortion', this.value)">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" onchange="updateParam('8d', this.checked)">
+                            <span class="text-[10px]">8D SPATIALIZER</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-2 border-t border-gray-400">
+                        <button id="recordBtn" onclick="toggleRecording()" class="retro-btn w-full bg-red-100 text-red-900 font-bold">
+                            ● RECORD SESSION
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="bg-[var(--panel-bg)] border-t border-[var(--panel-border-dark)] p-1 px-2 flex justify-between text-[10px] italic opacity-70">
+            <span id="statusTxt">Ready...</span>
+            <span id="osLabel">Windows 98 subsystem active</span>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            audioCtx: null, buffer: null, source: null,
+            gain: null, analyser: null, bass: null, filter: null,
+            reverb: null, reverbGain: null, dryGain: null, panner: null,
+            isPlaying: false, playbackRate: 1.0, startTime: 0, pauseTime: 0,
+            canvas: null, ctx: null, img: null, recorder: null, chunks: []
+        };
+
+        const visParams = { rgb: 2, scanlines: 0.2, glitch: 5, pixel: 1, is8D: false };
+
+        window.onload = () => {
+            lucide.createIcons();
+            initVisualizer();
+            // Default placeholder image
+            state.img = new Image();
+            state.img.src = 'https://picsum.photos/800/600?grayscale';
+        };
+
+        function setTheme(os) {
+            document.body.className = `theme-${os} h-screen flex flex-col items-center justify-center p-4`;
+            const title = document.getElementById('appTitle');
+            const osLabel = document.getElementById('osLabel');
+            
+            if(os === 'win98') {
+                title.innerText = "Slowed Penguin V2.exe";
+                osLabel.innerText = "Windows 98 (Subsystem 4.10)";
+            } else if(os === 'mac') {
+                title.innerText = "Slowed Penguin V2.app";
+                osLabel.innerText = "MacOS System 8.1 Runtime";
+            } else {
+                title.innerText = "Slowed Penguin V2.sh";
+                osLabel.innerText = "Caldera OpenLinux (Kernel 2.0.35)";
+            }
+            lucide.createIcons();
+        }
+
+        // XEYES LOGIC
+        function updateEyes(e) {
+            const eyes = document.querySelectorAll('.eye');
+            eyes.forEach(eye => {
+                const pupil = eye.querySelector('.pupil');
+                const rect = eye.getBoundingClientRect();
+                const eyeX = rect.left + rect.width / 2;
+                const eyeY = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+                const distance = Math.min(rect.width / 4, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10);
+                
+                const pupilX = Math.cos(angle) * distance;
+                const pupilY = Math.sin(angle) * distance;
+                
+                pupil.style.transform = `translate(calc(-50% + ${pupilX}px), calc(-50% + ${pupilY}px))`;
+            });
+        }
+
+        function initAudio() {
+            if (state.audioCtx) return;
+            state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            state.gain = state.audioCtx.createGain();
+            state.analyser = state.audioCtx.createAnalyser();
+            state.bass = state.audioCtx.createBiquadFilter();
+            state.bass.type = 'lowshelf'; state.bass.frequency.value = 200;
+            state.filter = state.audioCtx.createBiquadFilter();
+            state.filter.type = 'lowpass'; state.filter.frequency.value = 20000;
+            state.panner = state.audioCtx.createStereoPanner();
+            state.reverb = state.audioCtx.createConvolver();
+            state.reverbGain = state.audioCtx.createGain();
+            state.dryGain = state.audioCtx.createGain();
+            state.reverbGain.gain.value = 0.1;
+            
+            const len = state.audioCtx.sampleRate * 2;
+            const impulse = state.audioCtx.createBuffer(2, len, state.audioCtx.sampleRate);
+            for(let c=0; c<2; c++) {
+                const d = impulse.getChannelData(c);
+                for(let i=0; i<len; i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/len, 2);
+            }
+            state.reverb.buffer = impulse;
+        }
+
+        async function handleAudioUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            initAudio();
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            const buffer = await file.arrayBuffer();
+            state.audioCtx.decodeAudioData(buffer, (decoded) => {
+                state.buffer = decoded;
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('statusTxt').innerText = "Loaded Audio: " + file.name;
+                stopAudio(); playAudio();
+            });
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    state.img = img;
+                    document.getElementById('statusTxt').innerText = "Loaded Image: " + file.name;
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function playAudio() {
+            if(!state.buffer) return;
+            state.source = state.audioCtx.createBufferSource();
+            state.source.buffer = state.buffer;
+            state.source.playbackRate.value = state.playbackRate;
+            state.source.loop = true;
+
+            state.source.connect(state.filter);
+            state.filter.connect(state.bass);
+            state.bass.connect(state.panner);
+            state.panner.connect(state.dryGain);
+            state.panner.connect(state.reverb);
+            state.reverb.connect(state.reverbGain);
+            state.dryGain.connect(state.gain);
+            state.reverbGain.connect(state.gain);
+            state.gain.connect(state.analyser);
+            state.gain.connect(state.audioCtx.destination);
+
+            state.source.start(0, state.pauseTime);
+            state.startTime = state.audioCtx.currentTime - state.pauseTime;
+            state.isPlaying = true;
+            document.getElementById('playLed').classList.add('on');
+            updateLoop();
+        }
+
+        function stopAudio() {
+            if(state.source) {
+                state.pauseTime = (state.audioCtx.currentTime - state.startTime) % state.buffer.duration;
+                state.source.stop();
+                state.source = null;
+            }
+            state.isPlaying = false;
+            document.getElementById('playLed').classList.remove('on');
+        }
+
+        function togglePlay() { state.isPlaying ? stopAudio() : playAudio(); }
+
+        function updateParam(type, val) {
+            initAudio();
+            const v = parseFloat(val);
+            if(type === 'rate') {
+                state.playbackRate = v;
+                if(state.source) state.source.playbackRate.value = v;
+                document.getElementById('rateVal').innerText = v.toFixed(2) + 'x';
+            }
+            if(type === 'reverb') state.reverbGain.gain.value = v;
+            if(type === 'bass') state.bass.gain.value = v;
+            if(type === 'lowpass') state.filter.frequency.value = v;
+            if(type === '8d') visParams.is8D = val;
+        }
+
+        function applyPreset(p) {
+            if(p === 'vaporwave') { updateParam('rate', 0.85); updateParam('reverb', 0.35); updateParam('lowpass', 6000); }
+            if(p === 'screw') { updateParam('rate', 0.65); updateParam('bass', 18); updateParam('lowpass', 15000); }
+            if(p === 'nightcore') { updateParam('rate', 1.25); updateParam('reverb', 0.05); updateParam('lowpass', 20000); }
+        }
+
+        function initVisualizer() {
+            state.canvas = document.getElementById('visualizerCanvas');
+            state.ctx = state.canvas.getContext('2d', { willReadFrequently: true });
+            state.waveCanvas = document.getElementById('waveformCanvas');
+            state.waveCtx = state.waveCanvas.getContext('2d');
+            window.onresize = () => {
+                state.canvas.width = state.canvas.offsetWidth;
+                state.canvas.height = state.canvas.offsetHeight;
+                state.waveCanvas.width = state.waveCanvas.offsetWidth;
+                state.waveCanvas.height = state.waveCanvas.offsetHeight;
+            };
+            window.onresize();
+            render();
+        }
+
+        function updateVis(k, v) { visParams[k] = parseFloat(v); }
+
+        function updateLoop() {
+            if(!state.isPlaying) return;
+            const t = state.audioCtx.currentTime;
+            if(visParams.is8D) state.panner.pan.value = Math.sin(t * 0.5);
+            document.getElementById('trackTime').innerText = formatTime(state.pauseTime + (t - state.startTime)) + " / " + formatTime(state.buffer?.duration || 0);
+            requestAnimationFrame(updateLoop);
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+            const w = state.canvas.width, h = state.canvas.height, ctx = state.ctx;
+            const data = new Uint8Array(state.analyser?.frequencyBinCount || 128);
+            if(state.analyser) state.analyser.getByteFrequencyData(data);
+            const bassLevel = (data[0] || 0) / 255;
+
+            ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+            if(state.img) {
+                const s = 1 + bassLevel * 0.1;
+                ctx.drawImage(state.img, (w-w*s)/2, (h-h*s)/2, w*s, h*s);
+            }
+
+            if(visParams.rgb > 0) {
+                ctx.globalAlpha = 0.5; ctx.globalCompositeOperation = 'screen';
+                ctx.drawImage(state.canvas, visParams.rgb * bassLevel * 10, 0);
+                ctx.drawImage(state.canvas, -visParams.rgb * bassLevel * 10, 0);
+                ctx.globalAlpha = 1.0; ctx.globalCompositeOperation = 'source-over';
+            }
+
+            if(visParams.glitch > 0 && Math.random() < (visParams.glitch/100)) {
+                const sy = Math.random()*h, sh = 5 + Math.random()*20;
+                ctx.drawImage(state.canvas, 0, sy, w, sh, (Math.random()-0.5)*30, sy, w, sh);
+            }
+
+            if(visParams.scanlines > 0) {
+                ctx.fillStyle = `rgba(0,0,0,${visParams.scanlines})`;
+                for(let i=0; i<h; i+=4) ctx.fillRect(0, i, w, 1);
+            }
+
+            const wctx = state.waveCtx;
+            wctx.clearRect(0,0,state.waveCanvas.width, state.waveCanvas.height);
+            wctx.strokeStyle = '#0f0'; wctx.lineWidth = 2;
+            wctx.beginPath();
+            const slice = state.waveCanvas.width / data.length;
+            for(let i=0; i<data.length; i++) {
+                const y = (data[i]/255) * state.waveCanvas.height;
+                i===0 ? wctx.moveTo(0, y) : wctx.lineTo(i*slice, y);
+            }
+            wctx.stroke();
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s/60), sec = Math.floor(s%60);
+            return `${m}:${sec < 10 ? '0'+sec : sec}`;
+        }
+
+        function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            if(state.recorder) {
+                state.recorder.stop();
+                state.recorder = null;
+                btn.innerText = "● RECORD SESSION";
+                document.getElementById('statusTxt').innerText = "Saving video...";
+            } else {
+                initAudio();
+                const stream = state.canvas.captureStream(30);
+                state.recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                state.chunks = [];
+                state.recorder.ondataavailable = e => state.chunks.push(e.data);
+                state.recorder.onstop = () => {
+                    const blob = new Blob(state.chunks, { type: 'video/webm' });
+                    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                    a.download = 'slowed_session.webm'; a.click();
+                    document.getElementById('statusTxt').innerText = "Session Exported.";
+                };
+                state.recorder.start();
+                btn.innerText = "■ STOP RECORDING";
+                document.getElementById('statusTxt').innerText = "RECORDING ACTIVE";
+            }
+        }
+    </script>
+</body>
+</html>
